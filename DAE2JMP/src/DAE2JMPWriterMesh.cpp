@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include "DAE2JMP/JMPWriter.h"
+#include "DAE2JMP/Scene.h"
 
 #include <COLLADAFWMeshPrimitive.h>
 #include <COLLADAFWArrayPrimitiveType.h>
@@ -13,13 +14,13 @@
 
 const std::string WriterMesh::POSITION = "position";
 const std::string WriterMesh::NORMAL = "normal";
-const std::string WriterMesh::UV1 = "uv1";
+const std::string WriterMesh::UV0 = "uv0";
 const std::string WriterMesh::COLOUR = "colour";
 
 const unsigned int WriterMesh::POSITION_STRIDE = 3;
 const unsigned int WriterMesh::NORMAL_STRIDE = 3;
 
-bool WriterMesh::Vertex::operator<( const Vertex& rhs ) const
+bool Vertex::operator<( const Vertex& rhs ) const
 {
     if ( positionIndex < rhs.positionIndex )
         return true;
@@ -33,10 +34,10 @@ bool WriterMesh::Vertex::operator<( const Vertex& rhs ) const
     if ( normalIndex > rhs.normalIndex )
         return false;
     
-    if ( uv1Index < rhs.uv1Index )
+    if ( uv0Index < rhs.uv0Index )
         return true;
     
-    if ( uv1Index > rhs.uv1Index )
+    if ( uv0Index > rhs.uv0Index )
         return false;
     
     if ( colourIndex < rhs.colourIndex )
@@ -51,31 +52,37 @@ bool WriterMesh::Vertex::operator<( const Vertex& rhs ) const
 bool WriterMesh::write()
 {
     
-    std::ofstream output(this->mJMPWriter->getOutputFile());
+    std::ofstream *output = this->mJMPWriter->getOutputStream();
     
-    output << "GEOMETRY" << " " << mMesh->getName() << std::endl;
+    *output << "\nGEOMETRY" << " " << mMesh->getName() << std::endl;
     
     const COLLADAFW::MeshPrimitiveArray& meshPrimitives = mMesh->getMeshPrimitives();
     for(unsigned int i = 0; i < meshPrimitives.getCount(); i++ )
-    {
-        COLLADAFW::MeshPrimitive* meshPrimitive = meshPrimitives[i];
+   {
+        COLLADAFW::MeshPrimitive* meshPrimitive = meshPrimitives[0];
      
         // Get source and vertex data
         SourceData data = this->getSourceData(meshPrimitive);
         std::pair<VertexIndexData, VertexData> vertexData = this->getVertexData(meshPrimitive, data);
         
-        this->writeMeshHeader(output, data);
+        Mesh m;
+        m.sources = data;
+        m.vertices = vertexData.second;
+        m.indices = vertexData.first;
         
-        this->writeVertices(output, vertexData, data);
-        this->writeIndices(output, vertexData, data);
-    }
+        Scene &scene = Scene::getInstance();
+        
+        scene.loadedMeshes[mMesh->getName()] = m;
+        this->writeMeshHeader(*output, data);
     
-    output.close();
+        this->writeVertices(*output, vertexData, data);
+        this->writeIndices(*output, vertexData, data);
+    }
     
     return true;
 }
 
-WriterMesh::SourceData WriterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshPrimitive)
+SourceData WriterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshPrimitive)
 {
     SourceData data;
     
@@ -91,21 +98,21 @@ WriterMesh::SourceData WriterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshP
     data.hasNormals = (data.normalIndicesCount != 0);
     data.normalStride = NORMAL_STRIDE;
     
-    // UV1
-    const COLLADAFW::IndexListArray& uv1IndicesList = meshPrimitive->getUVCoordIndicesArray();
-    if ( !uv1IndicesList.empty() )
+    // uv0
+    const COLLADAFW::IndexListArray& uv0IndicesList = meshPrimitive->getUVCoordIndicesArray();
+    if ( !uv0IndicesList.empty() )
     {
-        data.uv1Indices = &uv1IndicesList[0]->getIndices();
-        data.uv1IndicesCount = data.uv1Indices->getCount();
-        data.hasUV1s = (data.uv1IndicesCount != 0);
-        if(data.hasUV1s)
+        data.uv0Indices = &uv0IndicesList[0]->getIndices();
+        data.uv0IndicesCount = data.uv0Indices->getCount();
+        data.hasUV0s = (data.uv0IndicesCount != 0);
+        if(data.hasUV0s)
         {
-            data.normalStride = mMesh->getUVCoords().getStride(0);
+            data.uv0Stride = mMesh->getUVCoords().getStride(0);
         }
     }
     else
     {
-        data.hasUV1s = false;
+        data.hasUV0s = false;
     }
     
     // Colours
@@ -128,7 +135,7 @@ WriterMesh::SourceData WriterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshP
     return data;
 }
 
-std::pair<WriterMesh::VertexIndexData, WriterMesh::VertexData> WriterMesh::getVertexData(COLLADAFW::MeshPrimitive* meshPrimitive, const SourceData &sourceData)
+std::pair<VertexIndexData, VertexData> WriterMesh::getVertexData(COLLADAFW::MeshPrimitive* meshPrimitive, const SourceData &sourceData)
 {
     
     std::pair<VertexIndexData, VertexData> vertexData;
@@ -143,10 +150,10 @@ std::pair<WriterMesh::VertexIndexData, WriterMesh::VertexData> WriterMesh::getVe
             normalIndex = (*sourceData.normalIndices)[i];
         }
         
-        unsigned int uv1Index = 0;
-        if(sourceData.hasUV1s)
+        unsigned int uv0Index = 0;
+        if(sourceData.hasUV0s)
         {
-            uv1Index = (*sourceData.uv1Indices)[i];
+            uv0Index = (*sourceData.uv0Indices)[i];
         }
         
         unsigned int colourIndex = 0;
@@ -155,7 +162,7 @@ std::pair<WriterMesh::VertexIndexData, WriterMesh::VertexData> WriterMesh::getVe
             colourIndex = (*sourceData.colourIndices)[i];
         }
         
-        Vertex vertex(positionIndex, normalIndex, uv1Index, colourIndex);
+        Vertex vertex(positionIndex, normalIndex, uv0Index, colourIndex);
         this->addVertex(vertexData.first, vertexData.second, vertex, sourceData);
     }
     
@@ -215,26 +222,26 @@ void WriterMesh::addVertex(VertexIndexData &vertexIndexData, VertexData &vertexD
             }
         }
         
-        if(data.hasUV1s)
+        if(data.hasUV0s)
         {
             if(mMesh->getUVCoords().getType() == COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE)
             {
-                const double *uv1Array = mMesh->getUVCoords().getDoubleValues()->getData();
-                uv1Array+= data.uv1Stride * vertex.uv1Index;
+                const double *uv0Array = mMesh->getUVCoords().getDoubleValues()->getData();
+                uv0Array+= data.uv0Stride * vertex.uv0Index;
                 
-                for(unsigned int i = 0; i < data.uv1Stride; i++)
+                for(unsigned int i = 0; i < data.uv0Stride; i++)
                 {
-                    vertexData.uv1s.push_back((float)uv1Array[i]);
+                    vertexData.uv0s.push_back((float)uv0Array[i]);
                 }
             }
             else
             {
-                const float *uv1Array = mMesh->getUVCoords().getFloatValues()->getData();
-                uv1Array+= data.uv1Stride * vertex.uv1Index;
+                const float *uv0Array = mMesh->getUVCoords().getFloatValues()->getData();
+                uv0Array+= data.uv0Stride * vertex.uv0Index;
                 
-                for(unsigned int i = 0; i < data.uv1Stride; i++)
+                for(unsigned int i = 0; i < data.uv0Stride; i++)
                 {
-                    vertexData.uv1s.push_back(uv1Array[i]);
+                    vertexData.uv0s.push_back(uv0Array[i]);
                 }
             }
         }
@@ -267,10 +274,10 @@ void WriterMesh::addVertex(VertexIndexData &vertexIndexData, VertexData &vertexD
     {
         vertexIndexData.elements.push_back(it->second);
     }
-
+    
 }
 
-void WriterMesh::writeMeshHeader(std::ofstream &output, const WriterMesh::SourceData &data)
+void WriterMesh::writeMeshHeader(std::ofstream &output, const SourceData &data)
 {
     // Positions
     if(data.hasPositions)
@@ -284,10 +291,10 @@ void WriterMesh::writeMeshHeader(std::ofstream &output, const WriterMesh::Source
         output << "S " << NORMAL << " " << data.normalStride << std::endl;
     }
     
-    // UV1s
-    if(data.hasUV1s)
+    // uv0s
+    if(data.hasUV0s)
     {
-        output << "S " << UV1 << " " << data.uv1Stride << std::endl;
+        output << "S " << UV0 << " " << data.uv0Stride << std::endl;
     }
     
     // Colours
@@ -317,16 +324,16 @@ void WriterMesh::writeVertices(std::ofstream &output, const std::pair<VertexInde
             for(unsigned int j = 0; j < sourceData.normalStride; j++)
             {
                 output << " " << vertexData.second.normals[normalIndex+j];
-
+                
             }
         }
         
-        if(sourceData.hasUV1s)
+        if(sourceData.hasUV0s)
         {
-            unsigned int uv1Index = i * sourceData.uv1Stride;
-            for(unsigned int j = 0; j < sourceData.uv1Stride; j++)
+            unsigned int uv0Index = i * sourceData.uv0Stride;
+            for(unsigned int j = 0; j < sourceData.uv0Stride; j++)
             {
-                output << " " << vertexData.second.uv1s[uv1Index+j];
+                output << " " << vertexData.second.uv0s[uv0Index+j];
                 
             }
         }
@@ -341,7 +348,7 @@ void WriterMesh::writeVertices(std::ofstream &output, const std::pair<VertexInde
             }
         }
     }
-
+    
     output << std::endl;
 }
 

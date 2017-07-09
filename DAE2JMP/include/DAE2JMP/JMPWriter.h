@@ -33,6 +33,8 @@ public:
     const std::string getInputFile() {  return this->config.inputFile;  }
     const std::string getOutputFile() {  return this->config.outputFile;  }
     
+    std::ofstream* getOutputStream() {   return this->output;    }
+    
     bool write();
     
     /** This method will be called if an error in the loading process occurred and the loader cannot
@@ -115,6 +117,11 @@ public:
     
 private:
     JMPWriterConfig config;
+    
+    std::ofstream *output;
+    
+    JMPWriter(const JMPWriter&);
+    JMPWriter& operator=(const JMPWriter&);
 };
 
 #endif /* _OPENCOLLADALOADER_H */

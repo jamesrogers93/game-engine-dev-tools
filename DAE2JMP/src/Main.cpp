@@ -22,8 +22,6 @@ int main(int argc, char *argv[])
         
         // Instantiate loader and read file
         JMPWriter writer(config);
-        writer.write();
+        return writer.write();
     }
-    
-    return 0;
 }

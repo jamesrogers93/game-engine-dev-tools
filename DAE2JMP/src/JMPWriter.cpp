@@ -10,16 +10,18 @@
 bool JMPWriter::write()
 {
     
+    bool status;
+    this->output = new std::ofstream(getOutputFile());
+    
     COLLADASaxFWL::Loader loader;
     COLLADAFW::Root root(&loader, this);
     
     // Load scene
-    if( !root.loadDocument(this->config.inputFile))
-    {
-        return false;
-    }
+    status = root.loadDocument(this->config.inputFile);
     
-    return true;
+    this->output->close();
+    
+    return status;
 }
 
 
