@@ -5,6 +5,7 @@
 #include <COLLADAFW.h>
 
 #include "DAE2JMP/DAE2JMPWriterMesh.h"
+#include "DAE2JMP/DAE2JMPWriterSkin.h"
 
 bool JMPWriter::write()
 {
@@ -121,7 +122,9 @@ bool JMPWriter::writeAnimationList( const COLLADAFW::AnimationList* animationLis
 bool JMPWriter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData )
 {
     std::cout << "Write skin contoller data" << std::endl;
-    return true;
+    
+    WriterSkin writerSkin( this, skinControllerData );
+    return writerSkin.write();
 }
 
 bool JMPWriter::writeController( const COLLADAFW::Controller* controller )

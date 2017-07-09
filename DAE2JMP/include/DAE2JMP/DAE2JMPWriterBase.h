@@ -9,6 +9,8 @@ public:
     WriterBase(JMPWriter *writer) : mJMPWriter(writer)
     {}
     
+    virtual bool write() = 0;
+    
 protected:
     JMPWriter *mJMPWriter;
 };
