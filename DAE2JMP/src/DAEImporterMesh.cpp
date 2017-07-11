@@ -99,7 +99,7 @@ Mesh DAEImporterMesh::getMeshData(const COLLADAFW::Mesh* mesh)
     // Set flag
     meshData.hasPositions = (meshData.positionIndicesCount != 0);
     
-    // Set stride
+    // Set Stride
     meshData.positionStride = POSITION_STRIDE;
     
     //
@@ -128,7 +128,7 @@ Mesh DAEImporterMesh::getMeshData(const COLLADAFW::Mesh* mesh)
     // Set flag
     meshData.hasNormals = (meshData.normalIndicesCount != 0);
     
-    // Set stride
+    // Set Stride
     meshData.normalStride = NORMAL_STRIDE;
     
     //
@@ -161,7 +161,7 @@ Mesh DAEImporterMesh::getMeshData(const COLLADAFW::Mesh* mesh)
         // Set flag
         meshData.hasUV0s = (meshData.uv0IndicesCount != 0);
         
-        // Set stride
+        // Set Stride
         meshData.uv0Stride = mesh->getUVCoords().getStride(0);
         
     }
@@ -196,7 +196,7 @@ Mesh DAEImporterMesh::getMeshData(const COLLADAFW::Mesh* mesh)
         // Set flag
         meshData.hasColours = (meshData.colourIndicesCount != 0);
         
-        // Set stride
+        // Set Stride
         meshData.colourStride = mesh->getColors().getStride(0);
         
     }
@@ -339,7 +339,7 @@ void DAEImporterMesh::addVertex(VertexIndexData &vertexIndexData, VertexData &ve
     if(it == vertexIndexData.map.end())
     {
         // Does not exist.
-        // Add source data provided by indices to the respective source array.
+        // Add source data provIded by indices to the respective source array.
         // Then add new element and append to the end of the elements list.
         
         vertexIndexData.elements.push_back(vertexIndexData.map[vertex] = vertexIndexData.nextVertexIndex++);

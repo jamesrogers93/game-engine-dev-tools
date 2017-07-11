@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     if(argc != 3)
     {
-        std::cout << "Must provide a DAE file path and a target file path" << std::endl;
+        std::cout << "Must provIde a DAE file path and a target file path" << std::endl;
         return 1;
     }
     else

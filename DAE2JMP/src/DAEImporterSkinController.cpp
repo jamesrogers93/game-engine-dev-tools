@@ -17,23 +17,23 @@ SkinController DAEImporterSkinController::getSkinControllerData(const COLLADAFW:
 {
     SkinController skinControllerData;
     
-    // get mesh id this controller points to
-    skinControllerData.meshID = skinController->getSource().getObjectId();
+    // get mesh Id this controller points to
+    skinControllerData.meshId = skinController->getSource().getObjectId();
     
-    // Get skin data id this contoller points to
-    skinControllerData.skinID = skinController->getSkinControllerData().getObjectId();
+    // Get skin data Id this contoller points to
+    skinControllerData.skinId = skinController->getSkinControllerData().getObjectId();
     
     // Get array of joints that this contoller points to
-    const COLLADAFW::UniqueIdArray *jointIDs = &skinController->getJoints();
+    const COLLADAFW::UniqueIdArray *jointIds = &skinController->getJoints();
     
     // Get count of joints
-    skinControllerData.numJointIDs = jointIDs->getCount();
+    skinControllerData.numJointIds = jointIds->getCount();
     
-    // Copy joint ids
-    skinControllerData.jointIds.reserve(skinControllerData.numJointIDs);
-    for(unsigned int i = 0; i < skinControllerData.numJointIDs; i++)
+    // Copy joint Ids
+    skinControllerData.jointIds.reserve(skinControllerData.numJointIds);
+    for(unsigned int i = 0; i < skinControllerData.numJointIds; i++)
     {
-        skinControllerData.jointIds.push_back(jointIDs->operator[](i).getObjectId());
+        skinControllerData.jointIds.push_back(jointIds->operator[](i).getObjectId());
     }
     
     return skinControllerData;

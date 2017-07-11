@@ -28,7 +28,7 @@ struct Skin
     
     
     std::vector<std::string> jointNames;
-    std::vector<int> jointIDs;
+    std::vector<int> jointIds;
     std::vector<float> weights;
 };
 

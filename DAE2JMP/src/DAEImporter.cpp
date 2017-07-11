@@ -24,130 +24,130 @@ bool DAEImporter::import()
     return status;
 }
 
-bool DAEImporter::addLoadedMesh(const unsigned long long& id, const Mesh& mesh)
+bool DAEImporter::addLoadedMesh(const unsigned long long& Id, const Mesh& mesh)
 {
-    if(this->loadedMeshes.find(id) == this->loadedMeshes.end())
+    if(this->loadedMeshes.find(Id) == this->loadedMeshes.end())
     {
-        this->loadedMeshes[id] = mesh;
+        this->loadedMeshes[Id] = mesh;
         return true;
     }
 
     return false;
 }
 
-bool DAEImporter::addLoadedSkin(const unsigned long long& id, const Skin& skin)
+bool DAEImporter::addLoadedSkin(const unsigned long long& Id, const Skin& skin)
 {
-    if(this->loadedSkins.find(id) == this->loadedSkins.end())
+    if(this->loadedSkins.find(Id) == this->loadedSkins.end())
     {
-        this->loadedSkins[id] = skin;
+        this->loadedSkins[Id] = skin;
         return true;
     }
     
     return false;
 }
 
-bool DAEImporter::addLoadedMaterial(const unsigned long long& id, const Material& mat)
+bool DAEImporter::addLoadedMaterial(const unsigned long long& Id, const Material& mat)
 {
-    if(this->loadedMaterials.find(id) == this->loadedMaterials.end())
+    if(this->loadedMaterials.find(Id) == this->loadedMaterials.end())
     {
-        this->loadedMaterials[id] = mat;
+        this->loadedMaterials[Id] = mat;
         return true;
     }
     
     return false;
 }
 
-bool DAEImporter::addLoadedEffect(const unsigned long long& id, const Effect& eff)
+bool DAEImporter::addLoadedEffect(const unsigned long long& Id, const Effect& eff)
 {
-    if(this->loadedEffects.find(id) == this->loadedEffects.end())
+    if(this->loadedEffects.find(Id) == this->loadedEffects.end())
     {
-        this->loadedEffects[id] = eff;
+        this->loadedEffects[Id] = eff;
         return true;
     }
 
     return false;
 }
 
-bool DAEImporter::addLoadedSkinController(const unsigned long long& id, const SkinController& sCont)
+bool DAEImporter::addLoadedSkinController(const unsigned long long& Id, const SkinController& sCont)
 {
-    if(this->loadedSkinControllers.find(id) == this->loadedSkinControllers.end())
+    if(this->loadedSkinControllers.find(Id) == this->loadedSkinControllers.end())
     {
-        this->loadedSkinControllers[id] = sCont;
+        this->loadedSkinControllers[Id] = sCont;
         return true;
     }
     
     return false;
 }
 
-bool DAEImporter::addLoadedVisualScene(const unsigned long long& id, const VisualScene& scene)
+bool DAEImporter::addLoadedVisualScene(const unsigned long long& Id, const VisualScene& scene)
 {
-    if(this->loadedVisualScenes.find(id) == this->loadedVisualScenes.end())
+    if(this->loadedVisualScenes.find(Id) == this->loadedVisualScenes.end())
     {
-        this->loadedVisualScenes[id] = scene;
+        this->loadedVisualScenes[Id] = scene;
         return true;
     }
     
     return false;
 }
 
-Mesh* DAEImporter::getLoadedMesh(const unsigned long long& id)
+Mesh* DAEImporter::getLoadedMesh(const unsigned long long& Id)
 {
-    if(this->loadedMeshes.find(id) == this->loadedMeshes.end())
+    if(this->loadedMeshes.find(Id) == this->loadedMeshes.end())
     {
         return NULL;
     }
     
-    return &this->loadedMeshes[id];
+    return &this->loadedMeshes[Id];
 }
 
-Skin* DAEImporter::getLoadedSkin(const unsigned long long& id)
+Skin* DAEImporter::getLoadedSkin(const unsigned long long& Id)
 {
-    if(this->loadedSkins.find(id) == this->loadedSkins.end())
+    if(this->loadedSkins.find(Id) == this->loadedSkins.end())
     {
         return NULL;
     }
     
-    return &this->loadedSkins[id];
+    return &this->loadedSkins[Id];
 }
 
-Material* DAEImporter::getLoadedMaterial(const unsigned long long & id)
+Material* DAEImporter::getLoadedMaterial(const unsigned long long & Id)
 {
-    if(this->loadedMaterials.find(id) == this->loadedMaterials.end())
+    if(this->loadedMaterials.find(Id) == this->loadedMaterials.end())
     {
         return NULL;
     }
     
-    return &this->loadedMaterials[id];
+    return &this->loadedMaterials[Id];
 }
 
-Effect* DAEImporter::getLoadedEffect(const unsigned long long& id)
+Effect* DAEImporter::getLoadedEffect(const unsigned long long& Id)
 {
-    if(this->loadedEffects.find(id) == this->loadedEffects.end())
+    if(this->loadedEffects.find(Id) == this->loadedEffects.end())
     {
         return NULL;
     }
     
-    return &this->loadedEffects[id];
+    return &this->loadedEffects[Id];
 }
 
-SkinController* DAEImporter::getLoadedSkinController(const unsigned long long& id)
+SkinController* DAEImporter::getLoadedSkinController(const unsigned long long& Id)
 {
-    if(this->loadedSkinControllers.find(id) == this->loadedSkinControllers.end())
+    if(this->loadedSkinControllers.find(Id) == this->loadedSkinControllers.end())
     {
         return NULL;
     }
     
-    return &this->loadedSkinControllers[id];
+    return &this->loadedSkinControllers[Id];
 }
 
-VisualScene* DAEImporter::getLoadedVisualScene(const unsigned long long& id)
+VisualScene* DAEImporter::getLoadedVisualScene(const unsigned long long& Id)
 {
-    if(this->loadedVisualScenes.find(id) == this->loadedVisualScenes.end())
+    if(this->loadedVisualScenes.find(Id) == this->loadedVisualScenes.end())
     {
         return NULL;
     }
     
-    return &this->loadedVisualScenes[id];
+    return &this->loadedVisualScenes[Id];
 }
 
 void DAEImporter::cancel(const COLLADABU::String& errorMessage)
@@ -175,14 +175,17 @@ bool DAEImporter::writeGlobalAsset ( const COLLADAFW::FileInfo* asset )
 
 bool DAEImporter::writeScene ( const COLLADAFW::Scene* scene )
 {
-    std::cout << "Wrtie scene" << std::endl;
+    std::cout << "Write scene" << std::endl;
+    
     return true;
 }
 
 bool DAEImporter::writeVisualScene ( const COLLADAFW::VisualScene* visualScene )
 {
     std::cout << "Write visual scene" << std::endl;
-    return true;
+    
+    DAEImporterVisualScene importerVisualScene(this);
+    return importerVisualScene.import(visualScene);
 }
 
 bool DAEImporter::writeLibraryNodes ( const COLLADAFW::LibraryNodes* libraryNodes )

@@ -17,7 +17,7 @@ Material DAEImporterMaterial::getMaterialData(const COLLADAFW::Material* mat)
 {
     Material matData;
     
-    matData.effectID = mat->getInstantiatedEffect().getObjectId();
+    matData.effectId = mat->getInstantiatedEffect().getObjectId();
     
     matData.name = mat->getName();
     

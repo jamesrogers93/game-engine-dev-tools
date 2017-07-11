@@ -102,14 +102,14 @@ Skin DAEImporterSkin::getSkinData(const COLLADAFW::SkinControllerData* skinContr
             // Add all data to skinData
             for(int i = 0; i < numVertexInfluences; i++)
             {
-                skinData.jointIDs.push_back(jointWeight[i].first);
+                skinData.jointIds.push_back(jointWeight[i].first);
                 skinData.weights.push_back(jointWeight[i].second);
             }
             
             // Pad with 0s till size of MAX_JOINT_INFLUENCE
             for(unsigned int i = numVertexInfluences; i < MAX_JOINT_INFLUENCE; i++)
             {
-                skinData.jointIDs.push_back(0);
+                skinData.jointIds.push_back(0);
                 skinData.weights.push_back(0.0);
             }
         }
@@ -118,7 +118,7 @@ Skin DAEImporterSkin::getSkinData(const COLLADAFW::SkinControllerData* skinContr
             // Size is the same, just add all data on to end
             for(unsigned int i = 0; i < MAX_JOINT_INFLUENCE; i++)
             {
-                skinData.jointIDs.push_back(jointWeight[i].first);
+                skinData.jointIds.push_back(jointWeight[i].first);
                 skinData.weights.push_back(jointWeight[i].second);
             }
         }

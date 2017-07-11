@@ -9,11 +9,11 @@
 
 struct SkinController
 {
-    unsigned long long meshID;
-    unsigned long long skinID;
+    unsigned long long meshId;
+    unsigned long long skinId;
     
     std::vector<unsigned long long> jointIds;
-    unsigned int numJointIDs;
+    unsigned int numJointIds;
 };
 
 class DAEImporterSkinController : public DAEImporterBase

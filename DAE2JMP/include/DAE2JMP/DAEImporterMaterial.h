@@ -9,7 +9,7 @@
 struct Material
 {
     std::string name;
-    unsigned long long effectID;
+    unsigned long long effectId;
 };
 
 class DAEImporterMaterial : public DAEImporterBase
