@@ -19,6 +19,7 @@
 #include "DAE2JMP/DAEImporterMaterial.h"
 #include "DAE2JMP/DAEImporterEffect.h"
 #include "DAE2JMP/DAEImporterSkinController.h"
+#include "DAE2JMP/DAEImporterVisualScene.h"
 
 
 //class Scene;
@@ -46,12 +47,14 @@ public:
     bool addLoadedMaterial(const unsigned long long&, const Material&);
     bool addLoadedEffect(const unsigned long long&, const Effect&);
     bool addLoadedSkinController(const unsigned long long&, const SkinController&);
+    bool addLoadedVisualScene(const unsigned long long&, const VisualScene&);
     
     Mesh* getLoadedMesh(const unsigned long long&);
     Skin* getLoadedSkin(const unsigned long long&);
     Material* getLoadedMaterial(const unsigned long long&);
     Effect* getLoadedEffect(const unsigned long long&);
     SkinController* getLoadedSkinController(const unsigned long long&);
+    VisualScene* getLoadedVisualScene(const unsigned long long&);
     
     /** This method will be called if an error in the loading process occurred and the loader cannot
      continue to to load. The writer should undo all operations that have been performed.
@@ -139,6 +142,7 @@ private:
     std::map<unsigned long long, Material> loadedMaterials;
     std::map<unsigned long long, Effect> loadedEffects;
     std::map<unsigned long long, SkinController> loadedSkinControllers;
+    std::map<unsigned long long, VisualScene> loadedVisualScenes;
     
     DAEImporter(const DAEImporter&);
     DAEImporter& operator=(const DAEImporter&);

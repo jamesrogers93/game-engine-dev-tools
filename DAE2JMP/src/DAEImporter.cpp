@@ -79,6 +79,17 @@ bool DAEImporter::addLoadedSkinController(const unsigned long long& id, const Sk
     return false;
 }
 
+bool DAEImporter::addLoadedVisualScene(const unsigned long long& id, const VisualScene& scene)
+{
+    if(this->loadedVisualScenes.find(id) == this->loadedVisualScenes.end())
+    {
+        this->loadedVisualScenes[id] = scene;
+        return true;
+    }
+    
+    return false;
+}
+
 Mesh* DAEImporter::getLoadedMesh(const unsigned long long& id)
 {
     if(this->loadedMeshes.find(id) == this->loadedMeshes.end())
@@ -127,6 +138,16 @@ SkinController* DAEImporter::getLoadedSkinController(const unsigned long long& i
     }
     
     return &this->loadedSkinControllers[id];
+}
+
+VisualScene* DAEImporter::getLoadedVisualScene(const unsigned long long& id)
+{
+    if(this->loadedVisualScenes.find(id) == this->loadedVisualScenes.end())
+    {
+        return NULL;
+    }
+    
+    return &this->loadedVisualScenes[id];
 }
 
 void DAEImporter::cancel(const COLLADABU::String& errorMessage)

@@ -6,6 +6,7 @@ list(APPEND DEVTOOLS_INC
 	"src/DAEImporterMesh.cpp"
 	"src/DAEImporterSkin.cpp"
 	"src/DAEImporterSkinController.cpp"
+	"src/DAEImporterVisualScene.cpp"
 	"src/DAEUtil.cpp"
 	"src/Main.cpp"
 )
