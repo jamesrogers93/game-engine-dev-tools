@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-#include "DAE2JMP/JMPWriter.h"
+#include "DAE2JMP/DAEImporter.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,14 +14,16 @@ int main(int argc, char *argv[])
     }
     else
     {
-        // Prepare loader configuration
-        JMPWriter::JMPWriterConfig config;
+        // Prepare importer configuration
+        DAEImporter::DAEImporterConfig config;
         config.inputFile = argv[1];
         config.outputFile = argv[2];
         config.loadGeometry = true;
         
         // Instantiate loader and read file
-        JMPWriter writer(config);
-        return writer.write();
+        DAEImporter importer(config);
+        bool status =  importer.import();
+        
+        return status;
     }
 }

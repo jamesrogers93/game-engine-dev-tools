@@ -1,5 +1,5 @@
-#ifndef _OPENCOLLADALOADER_H
-#define _OPENCOLLADALOADER_H
+#ifndef _DAEIMPORTER_H
+#define _DAEIMPORTER_H
 
 #include <string>
 
@@ -14,28 +14,44 @@
 #include "COLLADABUURI.h"
 #include "Math/COLLADABUMathMatrix4.h"
 
+#include "DAE2JMP/DAEImporterMesh.h"
+#include "DAE2JMP/DAEImporterSkin.h"
+#include "DAE2JMP/DAEImporterMaterial.h"
+#include "DAE2JMP/DAEImporterEffect.h"
+#include "DAE2JMP/DAEImporterSkinController.h"
+
 
 //class Scene;
 
-class JMPWriter : public COLLADAFW::IWriter
+class DAEImporter : public COLLADAFW::IWriter
 {
     
 public:
     
-    struct JMPWriterConfig
+    struct DAEImporterConfig
     {
         std::string inputFile, outputFile;
         bool loadGeometry = false;
     };
     
-    JMPWriter(const JMPWriterConfig &config) : config(config){}
+    DAEImporter(const DAEImporterConfig &config) : config(config){}
     
     const std::string getInputFile() {  return this->config.inputFile;  }
     const std::string getOutputFile() {  return this->config.outputFile;  }
     
-    std::ofstream* getOutputStream() {   return this->output;    }
+    bool import();
     
-    bool write();
+    bool addLoadedMesh(const unsigned long long&, const Mesh&);
+    bool addLoadedSkin(const unsigned long long&, const Skin&);
+    bool addLoadedMaterial(const unsigned long long&, const Material&);
+    bool addLoadedEffect(const unsigned long long&, const Effect&);
+    bool addLoadedSkinController(const unsigned long long&, const SkinController&);
+    
+    Mesh* getLoadedMesh(const unsigned long long&);
+    Skin* getLoadedSkin(const unsigned long long&);
+    Material* getLoadedMaterial(const unsigned long long&);
+    Effect* getLoadedEffect(const unsigned long long&);
+    SkinController* getLoadedSkinController(const unsigned long long&);
     
     /** This method will be called if an error in the loading process occurred and the loader cannot
      continue to to load. The writer should undo all operations that have been performed.
@@ -116,12 +132,16 @@ public:
     virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene );
     
 private:
-    JMPWriterConfig config;
+    DAEImporterConfig config;
     
-    std::ofstream *output;
+    std::map<unsigned long long, Mesh> loadedMeshes;
+    std::map<unsigned long long, Skin> loadedSkins;
+    std::map<unsigned long long, Material> loadedMaterials;
+    std::map<unsigned long long, Effect> loadedEffects;
+    std::map<unsigned long long, SkinController> loadedSkinControllers;
     
-    JMPWriter(const JMPWriter&);
-    JMPWriter& operator=(const JMPWriter&);
+    DAEImporter(const DAEImporter&);
+    DAEImporter& operator=(const DAEImporter&);
 };
 
-#endif /* _OPENCOLLADALOADER_H */
+#endif /* _DAEIMPORTER_H */

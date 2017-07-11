@@ -1,8 +1,12 @@
 list(APPEND DEVTOOLS_INC
+	"src/DAEImporter.cpp"
+	"src/DAEImporterBase.cpp"
+	"src/DAEImporterEffect.cpp"
+	"src/DAEImporterMaterial.cpp"
+	"src/DAEImporterMesh.cpp"
+	"src/DAEImporterSkin.cpp"
+	"src/DAEImporterSkinController.cpp"
+	"src/DAEUtil.cpp"
 	"src/Main.cpp"
-	"src/DAE2JMPWriterBase.cpp"
-	"src/DAE2JMPWriterMesh.cpp"
-	"src/DAE2JMPWriterSkin.cpp"
-	"src/JMPWriter.cpp"
 )
 

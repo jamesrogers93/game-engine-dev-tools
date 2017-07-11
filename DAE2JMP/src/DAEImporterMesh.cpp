@@ -1,26 +1,27 @@
-#include "DAE2JMP/DAE2JMPWriterMesh.h"
+#include "DAE2JMP/DAEImporterMesh.h"
 
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 
-#include "DAE2JMP/JMPWriter.h"
-#include "DAE2JMP/Scene.h"
+#include "DAE2JMP/DAEImporter.h"
+#include "DAE2JMP/DAEUtil.h"
 
 #include <COLLADAFWMeshPrimitive.h>
 #include <COLLADAFWArrayPrimitiveType.h>
 #include <COLLADAFWMeshVertexData.h>
 
-const std::string WriterMesh::POSITION = "position";
-const std::string WriterMesh::NORMAL = "normal";
-const std::string WriterMesh::UV0 = "uv0";
-const std::string WriterMesh::COLOUR = "colour";
 
-const unsigned int WriterMesh::POSITION_STRIDE = 3;
-const unsigned int WriterMesh::NORMAL_STRIDE = 3;
+const std::string DAEImporterMesh::POSITION = "position";
+const std::string DAEImporterMesh::NORMAL = "normal";
+const std::string DAEImporterMesh::UV0 = "uv0";
+const std::string DAEImporterMesh::COLOUR = "colour";
 
-bool Vertex::operator<( const Vertex& rhs ) const
+const unsigned int DAEImporterMesh::POSITION_STRIDE = 3;
+const unsigned int DAEImporterMesh::NORMAL_STRIDE = 3;
+
+/*bool Vertex::operator<( const Vertex& rhs ) const
 {
     if ( positionIndex < rhs.positionIndex )
         return true;
@@ -47,22 +48,179 @@ bool Vertex::operator<( const Vertex& rhs ) const
         return false;
     
     return false;
+}*/
+
+bool DAEImporterMesh::import(const COLLADAFW::Mesh* mesh)
+{
+    if(mesh == NULL) return false;
+    
+    
+    Mesh meshData = getMeshData(mesh);
+    
+    return this->mDAEImporter->addLoadedMesh(mesh->getObjectId(), meshData);
 }
 
-bool WriterMesh::write()
+Mesh DAEImporterMesh::getMeshData(const COLLADAFW::Mesh* mesh)
+{
+    Mesh meshData;
+    
+    COLLADAFW::MeshPrimitive *meshPrimitive;
+    if(mesh->getMeshPrimitives()[0] == NULL)
+    {
+        return meshData;
+    }
+    meshPrimitive = mesh->getMeshPrimitives()[0];
+    
+    // Get source data
+    
+    //
+    // Positions
+    //
+    
+    // Get source data
+    const COLLADAFW::FloatOrDoubleArray positions = mesh->getPositions();
+    const COLLADAFW::UIntValuesArray *positionIndices = &meshPrimitive->getPositionIndices();
+    
+    // Get data counts
+    meshData.positionsCount = positions.getValuesCount();
+    meshData.positionIndicesCount = positionIndices->getCount();
+    
+    // Copy data to vectors
+    for(unsigned int i = 0; i < meshData.positionsCount; i++)
+    {
+        meshData.positions.push_back(getFloatValue(positions, i));
+    }
+    
+    for(unsigned int i = 0; i < meshData.positionIndicesCount; i++)
+    {
+        meshData.positionIndices.push_back(positionIndices->getData()[i]);
+    }
+    
+    // Set flag
+    meshData.hasPositions = (meshData.positionIndicesCount != 0);
+    
+    // Set stride
+    meshData.positionStride = POSITION_STRIDE;
+    
+    //
+    // Normals
+    //
+    
+    // Get source data
+    const COLLADAFW::FloatOrDoubleArray normals = mesh->getNormals();
+    const COLLADAFW::UIntValuesArray *normalIndices = &meshPrimitive->getNormalIndices();
+    
+    // Get data counts
+    meshData.normalsCount = normals.getValuesCount();
+    meshData.normalIndicesCount = normalIndices->getCount();
+    
+    // Copy data to vectors
+    for(unsigned int i = 0; i < meshData.normalsCount; i++)
+    {
+        meshData.normals.push_back(getFloatValue(normals, i));
+    }
+    
+    for(unsigned int i = 0; i < meshData.normalIndicesCount; i++)
+    {
+        meshData.normalIndices.push_back(normalIndices->getData()[i]);
+    }
+    
+    // Set flag
+    meshData.hasNormals = (meshData.normalIndicesCount != 0);
+    
+    // Set stride
+    meshData.normalStride = NORMAL_STRIDE;
+    
+    //
+    // UV0s
+    //
+    
+    // Get source data
+    const COLLADAFW::FloatOrDoubleArray uv0s = mesh->getUVCoords();
+    const COLLADAFW::IndexListArray &uv0IndicesArray = meshPrimitive->getUVCoordIndicesArray();
+    
+    if ( !uv0IndicesArray.empty() )
+    {
+        const COLLADAFW::UIntValuesArray *uv0Indices = &uv0IndicesArray[0]->getIndices();
+        
+        // Get data counts
+        meshData.uv0sCount = uv0s.getValuesCount();
+        meshData.uv0IndicesCount = uv0Indices->getCount();
+        
+        // Copy data to vectors
+        for(unsigned int i = 0; i < meshData.uv0sCount; i++)
+        {
+            meshData.uv0s.push_back(getFloatValue(uv0s, i));
+        }
+        
+        for(unsigned int i = 0; i < meshData.uv0IndicesCount; i++)
+        {
+            meshData.uv0Indices.push_back(uv0Indices->getData()[i]);
+        }
+        
+        // Set flag
+        meshData.hasUV0s = (meshData.uv0IndicesCount != 0);
+        
+        // Set stride
+        meshData.uv0Stride = mesh->getUVCoords().getStride(0);
+        
+    }
+    
+    //
+    // Colours
+    //
+    
+    // Get source data
+    const COLLADAFW::FloatOrDoubleArray colours = mesh->getColors();
+    const COLLADAFW::IndexListArray &colourIndicesArray = meshPrimitive->getColorIndicesArray();
+    
+    if ( !colourIndicesArray.empty() )
+    {
+        const COLLADAFW::UIntValuesArray *colourIndices = &colourIndicesArray[0]->getIndices();
+        
+        // Get data counts
+        meshData.coloursCount = colours.getValuesCount();
+        meshData.colourIndicesCount = colourIndices->getCount();
+        
+        // Copy data to vectors
+        for(unsigned int i = 0; i < meshData.coloursCount; i++)
+        {
+            meshData.colours.push_back(getFloatValue(colours, i));
+        }
+        
+        for(unsigned int i = 0; i < meshData.colourIndicesCount; i++)
+        {
+            meshData.colourIndices.push_back(colourIndices->getData()[i]);
+        }
+        
+        // Set flag
+        meshData.hasColours = (meshData.colourIndicesCount != 0);
+        
+        // Set stride
+        meshData.colourStride = mesh->getColors().getStride(0);
+        
+    }
+    
+    meshData.name = mesh->getName();
+    
+    return meshData;
+}
+
+
+/*bool DAEImporterMesh::write()
 {
     
-    std::ofstream *output = this->mJMPWriter->getOutputStream();
+    //std::ofstream *output = this->mJMPImporter->getOutputStream();
     
-    *output << "\nGEOMETRY" << " " << mMesh->getName() << std::endl;
+    //*output << "\nGEOMETRY" << " " << mMesh->getName() << std::endl;
     
     const COLLADAFW::MeshPrimitiveArray& meshPrimitives = mMesh->getMeshPrimitives();
-    for(unsigned int i = 0; i < meshPrimitives.getCount(); i++ )
-   {
+    //for(unsigned int i = 0; i < meshPrimitives.getCount(); i++ )
+    //{
         COLLADAFW::MeshPrimitive* meshPrimitive = meshPrimitives[0];
      
         // Get source and vertex data
-        SourceData data = this->getSourceData(meshPrimitive);
+        VertexSourceData data = this->getSourceData(meshPrimitive);
         std::pair<VertexIndexData, VertexData> vertexData = this->getVertexData(meshPrimitive, data);
         
         Mesh m;
@@ -73,18 +231,18 @@ bool WriterMesh::write()
         Scene &scene = Scene::getInstance();
         
         scene.loadedMeshes[mMesh->getName()] = m;
-        this->writeMeshHeader(*output, data);
+        //this->writeMeshHeader(*output, data);
     
-        this->writeVertices(*output, vertexData, data);
-        this->writeIndices(*output, vertexData, data);
-    }
+        //this->writeVertices(*output, vertexData, data);
+        //this->writeIndices(*output, vertexData, data);
+    //}
     
     return true;
 }
 
-SourceData WriterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshPrimitive)
+VertexSourceData DAEImporterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshPrimitive)
 {
-    SourceData data;
+    VertexSourceData data;
     
     // Positions
     data.positionIndices = &meshPrimitive->getPositionIndices();
@@ -135,13 +293,15 @@ SourceData WriterMesh::getSourceData(COLLADAFW::MeshPrimitive* meshPrimitive)
     return data;
 }
 
-std::pair<VertexIndexData, VertexData> WriterMesh::getVertexData(COLLADAFW::MeshPrimitive* meshPrimitive, const SourceData &sourceData)
+std::pair<VertexIndexData, VertexData> DAEImporterMesh::getVertexData(COLLADAFW::MeshPrimitive* meshPrimitive, const VertexSourceData &sourceData)
 {
     
     std::pair<VertexIndexData, VertexData> vertexData;
     
+    // Loop over all of the position indices
     for(unsigned int i = 0; i < sourceData.positionIndicesCount; i++)
     {
+        // Get the index for the source data
         unsigned int positionIndex = (*sourceData.positionIndices)[i];
         
         unsigned int normalIndex = 0;
@@ -162,19 +322,26 @@ std::pair<VertexIndexData, VertexData> WriterMesh::getVertexData(COLLADAFW::Mesh
             colourIndex = (*sourceData.colourIndices)[i];
         }
         
+        // Create a vertex with the source data indices
         Vertex vertex(positionIndex, normalIndex, uv0Index, colourIndex);
+        
+        // Add vertex to the vertexData
         this->addVertex(vertexData.first, vertexData.second, vertex, sourceData);
     }
     
     return vertexData;
 }
 
-void WriterMesh::addVertex(VertexIndexData &vertexIndexData, VertexData &vertexData, Vertex &vertex, const SourceData &data)
+void DAEImporterMesh::addVertex(VertexIndexData &vertexIndexData, VertexData &vertexData, Vertex &vertex, const VertexSourceData &data)
 {
-    
+    // Check if this vertex already exists
     VertexIndexMap::const_iterator it = vertexIndexData.map.find(vertex);
     if(it == vertexIndexData.map.end())
     {
+        // Does not exist.
+        // Add source data provided by indices to the respective source array.
+        // Then add new element and append to the end of the elements list.
+        
         vertexIndexData.elements.push_back(vertexIndexData.map[vertex] = vertexIndexData.nextVertexIndex++);
         
         if(mMesh->getPositions().getType() == COLLADAFW::MeshVertexData::DATA_TYPE_DOUBLE)
@@ -272,12 +439,15 @@ void WriterMesh::addVertex(VertexIndexData &vertexIndexData, VertexData &vertexD
     }
     else
     {
+        // Vertex exists.
+        // Add the element of the found vertex to the elements array.
+        
         vertexIndexData.elements.push_back(it->second);
     }
     
 }
 
-void WriterMesh::writeMeshHeader(std::ofstream &output, const SourceData &data)
+void DAEImporterMesh::writeMeshHeader(std::ofstream &output, const VertexSourceData &data)
 {
     // Positions
     if(data.hasPositions)
@@ -304,7 +474,7 @@ void WriterMesh::writeMeshHeader(std::ofstream &output, const SourceData &data)
     }
 }
 
-void WriterMesh::writeVertices(std::ofstream &output, const std::pair<VertexIndexData, VertexData>& vertexData, const SourceData &sourceData)
+void DAEImporterMesh::writeVertices(std::ofstream &output, const std::pair<VertexIndexData, VertexData>& vertexData, const VertexSourceData &sourceData)
 {
     output << "V " << vertexData.first.nextVertexIndex;
     
@@ -352,7 +522,7 @@ void WriterMesh::writeVertices(std::ofstream &output, const std::pair<VertexInde
     output << std::endl;
 }
 
-void WriterMesh::writeIndices(std::ofstream &output, const std::pair<VertexIndexData, VertexData>& vertexData, const SourceData &sourceData)
+void DAEImporterMesh::writeIndices(std::ofstream &output, const std::pair<VertexIndexData, VertexData>& vertexData, const VertexSourceData &sourceData)
 {
     output << "I " << vertexData.first.elements.size() << " ";
     
@@ -361,4 +531,4 @@ void WriterMesh::writeIndices(std::ofstream &output, const std::pair<VertexIndex
     
     output << std::endl;
     
-}
+}*/
