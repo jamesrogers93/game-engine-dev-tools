@@ -8,6 +8,8 @@ list(APPEND DEVTOOLS_INC
 	"src/DAEImporterSkinController.cpp"
 	"src/DAEImporterVisualScene.cpp"
 	"src/DAEUtil.cpp"
+	"src/JMPData.cpp"
+	"src/JMPExporter.cpp"
 	"src/Main.cpp"
 )
 

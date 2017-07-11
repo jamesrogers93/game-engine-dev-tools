@@ -14,6 +14,7 @@
 #include "COLLADABUURI.h"
 #include "Math/COLLADABUMathMatrix4.h"
 
+#include "DAE2JMP/JMPData.h"
 #include "DAE2JMP/DAEImporterMesh.h"
 #include "DAE2JMP/DAEImporterSkin.h"
 #include "DAE2JMP/DAEImporterMaterial.h"
@@ -31,16 +32,15 @@ public:
     
     struct DAEImporterConfig
     {
-        std::string inputFile, outputFile;
-        bool loadGeometry = false;
+        std::string inputFile;
+        JMPData *jmpData;
     };
     
     DAEImporter(const DAEImporterConfig &config) : config(config){}
     
-    const std::string getInputFile() {  return this->config.inputFile;  }
-    const std::string getOutputFile() {  return this->config.outputFile;  }
+    //const std::string getInputFile() {  return this->config.inputFile;  }
     
-    bool import();
+    bool Import();
     
     bool addLoadedMesh(const unsigned long long&, const Mesh&);
     bool addLoadedSkin(const unsigned long long&, const Skin&);

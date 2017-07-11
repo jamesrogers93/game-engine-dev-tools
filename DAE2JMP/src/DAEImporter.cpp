@@ -10,7 +10,7 @@
 #include "DAE2JMP/DAEImporterEffect.h"
 #include "DAE2JMP/DAEImporterSkinController.h"
 
-bool DAEImporter::import()
+bool DAEImporter::Import()
 {
     
     bool status;
@@ -20,6 +20,10 @@ bool DAEImporter::import()
     
     // Import scene
     status = root.loadDocument(this->config.inputFile);
+    
+    
+    // Now convert imported data to JMP
+    
     
     return status;
 }

@@ -8,4 +8,6 @@ list(APPEND DEVTOOLS_INC
 	"include/DAE2JMP/DAEImporterSkinController.h"
 	"include/DAE2JMP/DAEImporterVisualScene.h"
 	"include/DAE2JMP/DAEUtil.h"
+	"include/DAE2JMP/JMPData.h"
+	"include/DAE2JMP/JMPExporter.h"
 )
