@@ -9,27 +9,32 @@
 #include "DAE2JMP/DAEImporter.h"
 #include "DAE2JMP/JMPData.h"
 
-class JMPExporter
+namespace DAE2JMP
 {
-public:
-    struct JMPExporterConfig
+
+    class JMPExporter
     {
-        std::string outputFile;
-        JMPData *jmpData;
-    };
-    
-    JMPExporter(const JMPExporterConfig &config) : mConfig(config)
-    {
+    public:
+        struct JMPExporterConfig
+        {
+            std::string outputFile;
+            JMPData *jmpData;
+        };
         
-    }
-    
-    
-    bool Export(const DAEImporter &importer);
-    
-private:
-    JMPExporterConfig mConfig;
-    
-    std::ofstream mOutputStream;
-};
+        JMPExporter(const JMPExporterConfig &config) : mConfig(config)
+        {
+            
+        }
+        
+        
+        bool Export(const DAEImporter &importer);
+        
+    private:
+        JMPExporterConfig mConfig;
+        
+        std::ofstream mOutputStream;
+    };
+
+}
 
 #endif /* _JMPEXPORTER_H */

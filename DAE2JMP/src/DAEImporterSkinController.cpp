@@ -4,37 +4,42 @@
 
 #include <COLLADAFWUniqueId.h>
 
-bool DAEImporterSkinController::import(const COLLADAFW::SkinController* skinController)
+namespace DAE2JMP
 {
-    if(skinController == NULL) return false;
-    
-    SkinController skinContollerData = getSkinControllerData(skinController);
-    
-    return this->mDAEImporter->addLoadedSkinController(skinController->getObjectId(), skinContollerData);
-}
 
-SkinController DAEImporterSkinController::getSkinControllerData(const COLLADAFW::SkinController* skinController)
-{
-    SkinController skinControllerData;
-    
-    // get mesh Id this controller points to
-    skinControllerData.meshId = skinController->getSource().getObjectId();
-    
-    // Get skin data Id this contoller points to
-    skinControllerData.skinId = skinController->getSkinControllerData().getObjectId();
-    
-    // Get array of joints that this contoller points to
-    const COLLADAFW::UniqueIdArray *jointIds = &skinController->getJoints();
-    
-    // Get count of joints
-    skinControllerData.numJointIds = jointIds->getCount();
-    
-    // Copy joint Ids
-    skinControllerData.jointIds.reserve(skinControllerData.numJointIds);
-    for(unsigned int i = 0; i < skinControllerData.numJointIds; i++)
+    bool DAEImporterSkinController::import(const COLLADAFW::SkinController* skinController)
     {
-        skinControllerData.jointIds.push_back(jointIds->operator[](i).getObjectId());
+        if(skinController == NULL) return false;
+        
+        DAESkinController skinContollerData = getSkinControllerData(skinController);
+        
+        return this->mDAEImporter->addLoadedSkinController(skinController->getObjectId(), skinContollerData);
     }
-    
-    return skinControllerData;
+
+    DAESkinController DAEImporterSkinController::getSkinControllerData(const COLLADAFW::SkinController* skinController)
+    {
+        DAESkinController skinControllerData;
+        
+        // get mesh Id this controller points to
+        skinControllerData.meshId = skinController->getSource().getObjectId();
+        
+        // Get skin data Id this contoller points to
+        skinControllerData.skinId = skinController->getSkinControllerData().getObjectId();
+        
+        // Get array of joints that this contoller points to
+        const COLLADAFW::UniqueIdArray *jointIds = &skinController->getJoints();
+        
+        // Get count of joints
+        skinControllerData.numJointIds = jointIds->getCount();
+        
+        // Copy joint Ids
+        skinControllerData.jointIds.reserve(skinControllerData.numJointIds);
+        for(unsigned int i = 0; i < skinControllerData.numJointIds; i++)
+        {
+            skinControllerData.jointIds.push_back(jointIds->operator[](i).getObjectId());
+        }
+        
+        return skinControllerData;
+    }
+
 }

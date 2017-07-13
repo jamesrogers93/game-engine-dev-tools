@@ -4,22 +4,27 @@
 
 #include <COLLADAFWUniqueId.h>
 
-bool DAEImporterMaterial::import(const COLLADAFW::Material* mat)
+namespace DAE2JMP
 {
-    if(mat == NULL) return false;
-    
-    Material matData = getMaterialData(mat);
-    
-    return this->mDAEImporter->addLoadedMaterial(mat->getObjectId(), matData);
-}
 
-Material DAEImporterMaterial::getMaterialData(const COLLADAFW::Material* mat)
-{
-    Material matData;
-    
-    matData.effectId = mat->getInstantiatedEffect().getObjectId();
-    
-    matData.name = mat->getName();
-    
-    return matData;
+    bool DAEImporterMaterial::import(const COLLADAFW::Material* mat)
+    {
+        if(mat == NULL) return false;
+        
+        DAEMaterial matData = getMaterialData(mat);
+        
+        return this->mDAEImporter->addLoadedMaterial(mat->getObjectId(), matData);
+    }
+
+    DAEMaterial DAEImporterMaterial::getMaterialData(const COLLADAFW::Material* mat)
+    {
+        DAEMaterial matData;
+        
+        matData.effectId = mat->getInstantiatedEffect().getObjectId();
+        
+        matData.name = mat->getName();
+        
+        return matData;
+    }
+
 }

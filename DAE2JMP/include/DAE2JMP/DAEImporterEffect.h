@@ -6,35 +6,37 @@
 #include "DAE2JMP/DAEImporterBase.h"
 #include <COLLADAFWEffect.h>
 
-struct Effect
+namespace DAE2JMP
 {
-    std::string name;
-    
-    float ambient[4] = {0.0};
-    float diffuse[4] = {0.0};
-    float specular[4] = {0.0};
-    float shininess = 0.0;
-    
-    bool hasAmbient = false;
-    bool hasDiffuse = false;
-    bool hasSpecular = false;
-    bool hasShininess = false;
-};
+    struct DAEEffect
+    {
+        std::string name;
+        
+        float ambient[4] = {0.0};
+        float diffuse[4] = {0.0};
+        float specular[4] = {0.0};
+        float shininess = 0.0;
+        
+        bool hasAmbient = false;
+        bool hasDiffuse = false;
+        bool hasSpecular = false;
+        bool hasShininess = false;
+    };
 
-class DAEImporterEffect : public DAEImporterBase
-{
-    
-public:
-    DAEImporterEffect(DAEImporter *importer) : DAEImporterBase(importer)
-    {}
-    
-    bool import(const COLLADAFW::Effect*);
-    
-private:
-    
-    Effect getEffectData(const COLLADAFW::Effect*);
-    
-};
-
+    class DAEImporterEffect : public DAEImporterBase
+    {
+        
+    public:
+        DAEImporterEffect(DAEImporter *importer) : DAEImporterBase(importer)
+        {}
+        
+        bool import(const COLLADAFW::Effect*);
+        
+    private:
+        
+        DAEEffect getEffectData(const COLLADAFW::Effect*);
+        
+    };
+}
 
 #endif /* _DAEIMPORTEREFFECT_H */

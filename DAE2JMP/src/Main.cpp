@@ -17,27 +17,27 @@ int main(int argc, char *argv[])
     else
     {
         
-        JMPData jmpData;
+        DAE2JMP::JMPData jmpData;
         
         // Prepare importer configuration
-        DAEImporter::DAEImporterConfig imConfig;
+        DAE2JMP::DAEImporter::DAEImporterConfig imConfig;
         imConfig.inputFile = argv[1];
         imConfig.jmpData = &jmpData;
         
         
         
         // Instantiate loader and read file
-        DAEImporter importer(imConfig);
+        DAE2JMP::DAEImporter importer(imConfig);
         bool status =  importer.Import();
         
         if(status)
         {
             // Instantiate exporter
-            JMPExporter::JMPExporterConfig exConfig;
+            DAE2JMP::JMPExporter::JMPExporterConfig exConfig;
             exConfig.outputFile = argv[2];
             exConfig.jmpData = &jmpData;
             
-            JMPExporter exporter(exConfig);
+            DAE2JMP::JMPExporter exporter(exConfig);
             
             status = exporter.Export(importer);
         }

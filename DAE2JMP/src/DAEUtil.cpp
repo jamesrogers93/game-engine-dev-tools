@@ -1,13 +1,18 @@
 #include "DAE2JMP/DAEUtil.h"
 
-float getFloatValue(const COLLADAFW::FloatOrDoubleArray& array, const unsigned int &index)
+namespace DAE2JMP
 {
-    if(array.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_DOUBLE)
+
+    float getFloatValue(const COLLADAFW::FloatOrDoubleArray& array, const unsigned int &index)
     {
-        return (float)array.getDoubleValues()->getData()[index];
+        if(array.getType() == COLLADAFW::FloatOrDoubleArray::DATA_TYPE_DOUBLE)
+        {
+            return (float)array.getDoubleValues()->getData()[index];
+        }
+        else
+        {
+            return array.getFloatValues()->getData()[index];
+        }
     }
-    else
-    {
-        return array.getFloatValues()->getData()[index];
-    }
+
 }
