@@ -10,6 +10,9 @@ list(APPEND DEVTOOLS_INC
 	"src/DAEUtil.cpp"
 	"src/JMPData.cpp"
 	"src/JMPExporter.cpp"
+	"src/JMPExporterBase.cpp"
+	"src/JMPExporterGeometry.cpp"
+	"src/JMPExporterMaterial.cpp"
 	"src/Main.cpp"
 )
 

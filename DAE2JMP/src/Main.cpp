@@ -34,12 +34,12 @@ int main(int argc, char *argv[])
         {
             // Instantiate exporter
             DAE2JMP::JMPExporter::JMPExporterConfig exConfig;
-            exConfig.outputFile = argv[2];
+            exConfig.outputFolder = argv[2];
             exConfig.jmpData = &jmpData;
             
             DAE2JMP::JMPExporter exporter(exConfig);
             
-            status = exporter.Export(importer);
+            status = exporter.Export();
         }
         
         return status;

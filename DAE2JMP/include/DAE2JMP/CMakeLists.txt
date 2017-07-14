@@ -10,4 +10,7 @@ list(APPEND DEVTOOLS_INC
 	"include/DAE2JMP/DAEUtil.h"
 	"include/DAE2JMP/JMPData.h"
 	"include/DAE2JMP/JMPExporter.h"
+	"include/DAE2JMP/JMPExporterBase.h"
+	"include/DAE2JMP/JMPExporterGeometry.h"
+	"include/DAE2JMP/JMPExporterMaterial.h"
 )

@@ -9,6 +9,10 @@
 #include "DAE2JMP/DAEImporter.h"
 #include "DAE2JMP/JMPData.h"
 
+class Material;
+class Geometry;
+class ENode;
+
 namespace DAE2JMP
 {
 
@@ -17,7 +21,7 @@ namespace DAE2JMP
     public:
         struct JMPExporterConfig
         {
-            std::string outputFile;
+            std::string outputFolder;
             JMPData *jmpData;
         };
         
@@ -27,12 +31,22 @@ namespace DAE2JMP
         }
         
         
-        bool Export(const DAEImporter &importer);
+        bool Export();
+        
+        std::ofstream* getOutputStream() { return &this->mOutputStream; }
         
     private:
         JMPExporterConfig mConfig;
         
         std::ofstream mOutputStream;
+        
+        void exportMaterials();
+        void exportGeometries();
+        void exportEntites();
+        
+        bool exportMaterial(const Material*);
+        bool exportGeometry(const Geometry*);
+        bool exportEntity(const ENode*);
     };
 
 }

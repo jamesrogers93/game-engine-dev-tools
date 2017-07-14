@@ -36,6 +36,10 @@ namespace DAE2JMP
         
         void convert(DAEImporter *);
         
+        std::map<std::string, Geometry*>& getGeometries() { return this->geometries; }
+        std::map<std::string, Material*>& getMaterials() { return this->materials; }
+        std::map<std::string, ENode*>& getEntites() { return this->entities; }
+        
     private:
         ENode* processVisualScene(DAEEntity *, DAEImporter *);
         
