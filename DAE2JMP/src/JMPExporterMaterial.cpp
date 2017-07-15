@@ -2,9 +2,7 @@
 
 #include "DAE2JMP/JMPExporter.h"
 
-#include "game-engine/Core/Modules/Graphics/Material.h"
-
-#include "glm/gtx/string_cast.hpp"
+#include "game-engine/Modules/Graphics/Material.h"
 
 namespace DAE2JMP
 {

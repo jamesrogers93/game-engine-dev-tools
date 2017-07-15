@@ -1,4 +1,5 @@
 list(APPEND DEVTOOLS_INC
+	"include/DAE2JMP/DAE2JMPConfig.h"	
 	"include/DAE2JMP/DAEImporter.h"	
 	"include/DAE2JMP/DAEImporterBase.h"
 	"include/DAE2JMP/DAEImporterEffect.h"

@@ -15,11 +15,6 @@
 namespace DAE2JMP
 {
 
-    const std::string DAEImporterMesh::POSITION = "position";
-    const std::string DAEImporterMesh::NORMAL = "normal";
-    const std::string DAEImporterMesh::UV0 = "uv0";
-    const std::string DAEImporterMesh::COLOUR = "colour";
-
     const unsigned int DAEImporterMesh::POSITION_STRIDE = 3;
     const unsigned int DAEImporterMesh::NORMAL_STRIDE = 3;
 

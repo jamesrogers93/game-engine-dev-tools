@@ -1,23 +1,21 @@
 #include "DAE2JMP/JMPExporter.h"
 
 #include "DAE2JMP/JMPExporterMaterial.h"
+#include "DAE2JMP/JMPExporterGeometry.h"
 
 namespace DAE2JMP
 {
 
     bool JMPExporter::Export()
     {
-        //this->mOutputStream.open(this->mConfig.outputFile, std::ios::binary | std::ios::trunc);
-        
         // Export materials
         exportMaterials();
         
         // Export Geometries
-        exportGeometries();
+        exportMeshes();
         
         // Export entity hierarchy
-        //for(auto &entity : )
-        
+        exportEntites();
         
         return true;
     }
@@ -37,16 +35,16 @@ namespace DAE2JMP
         }
     }
     
-    void JMPExporter::exportGeometries()
+    void JMPExporter::exportMeshes()
     {
-        for(auto &geo : this->mConfig.jmpData->getGeometries())
+        for(auto &mesh : this->mConfig.jmpData->getMeshes())
         {
             // Open file to write
-            std::string path = this->mConfig.outputFolder + geo.first + ".jmpMesh";
+            std::string path = this->mConfig.outputFolder + mesh.first + ".jmpMesh";
             
             this->mOutputStream.open(path, std::ios::binary | std::ios::trunc);
             
-            exportGeometry(geo.second);
+            exportMesh(mesh.second);
             
             this->mOutputStream.close();
         }
@@ -54,6 +52,22 @@ namespace DAE2JMP
     
     void JMPExporter::exportEntites()
     {
+        std::string path = this->mConfig.inputFile;
+        std::string name;
+        
+        size_t sep = path.find_last_of("\\/");
+        if (sep != std::string::npos)
+            path = path.substr(sep + 1, path.size() - sep - 1);
+        
+        size_t dot = path.find_last_of(".");
+        if (dot != std::string::npos)
+        {
+            name = path.substr(0, dot);
+        }
+        else
+        {
+            name = path;
+        }
         
     }
     
@@ -65,12 +79,14 @@ namespace DAE2JMP
         return exporterMaterial.Export(mat);
     }
     
-    bool JMPExporter::exportGeometry(const Geometry*)
+    bool JMPExporter::exportMesh(const Mesh* mesh)
     {
-        return true;
+        JMPExporterMesh exporterMesh(this);
+        
+        return exporterMesh.Export(mesh);
     }
     
-    bool JMPExporter::exportEntity(const ENode*)
+    bool JMPExporter::exportEntity(const Entity*)
     {
         return true;
     }

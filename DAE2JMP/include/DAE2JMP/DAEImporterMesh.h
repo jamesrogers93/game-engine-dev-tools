@@ -125,11 +125,6 @@ namespace DAE2JMP
     private:
         //typedef std::pair<VertexIndexMap, VertexElements> VertexIndexData;
         
-        static const std::string POSITION;
-        static const std::string NORMAL;
-        static const std::string UV0;
-        static const std::string COLOUR;
-        
         static const unsigned int POSITION_STRIDE;
         static const unsigned int NORMAL_STRIDE;
         

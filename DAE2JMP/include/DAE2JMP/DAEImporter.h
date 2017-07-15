@@ -14,7 +14,7 @@
 #include "COLLADABUURI.h"
 #include "Math/COLLADABUMathMatrix4.h"
 
-#include "DAE2JMP/JMPData.h"
+#include "DAE2JMP/DAE2JMPConfig.h"
 #include "DAE2JMP/DAEImporterMesh.h"
 #include "DAE2JMP/DAEImporterSkin.h"
 #include "DAE2JMP/DAEImporterMaterial.h"
@@ -32,13 +32,7 @@ namespace DAE2JMP
         
     public:
         
-        struct DAEImporterConfig
-        {
-            std::string inputFile;
-            JMPData *jmpData;
-        };
-        
-        DAEImporter(const DAEImporterConfig &config) : config(config){}
+        DAEImporter(const DAE2JMPConfig &config) : config(config){}
         
         //const std::string getInputFile() {  return this->config.inputFile;  }
         
@@ -139,7 +133,7 @@ namespace DAE2JMP
         virtual bool writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene );
         
     private:
-        DAEImporterConfig config;
+        DAE2JMPConfig config;
         
         std::map<unsigned long long, DAEMesh> loadedMeshes;
         std::map<unsigned long long, DAESkin> loadedSkins;
