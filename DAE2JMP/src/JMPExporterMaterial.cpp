@@ -11,30 +11,32 @@ namespace DAE2JMP
         
         std::ofstream *output = this->mJMPExporter->getOutputStream();
         
+        *output << mat->getName() << std::endl;
+        
         // Write diffuse
         if(mat->hasDiffuseTexture())
         {
-            *output << "diff T " << mat->getDiffuseTexture() << std::endl;
+            *output << "-DT " << mat->getDiffuseTexture() << std::endl;
         }
         else if (mat->hasDiffuseSolid())
         {
             glm::vec4 diff = mat->getDiffuseSolid();
-            *output << "diff S " << diff.x << " " << diff.y << " " << diff.z << " " << diff.w << std::endl;
+            *output << "-DS " << diff.x << " " << diff.y << " " << diff.z << " " << diff.w << std::endl;
         }
         
         // Write specular
         if(mat->hasSpecularTexture())
         {
-            *output << "spec T " << mat->getSpecularTexture() << std::endl;
+            *output << "-ST " << mat->getSpecularTexture() << std::endl;
         }
         else if (mat->hasSpecularSolid())
         {
             glm::vec4 spec = mat->getSpecularSolid();
-            *output << "spec S " << spec.x << " " << spec.y << " " << spec.z << " " << spec.w << std::endl;
+            *output << "-SS " << spec.x << " " << spec.y << " " << spec.z << " " << spec.w << std::endl;
         }
         
         // Write shininess
-        *output << "shin " << mat->getShininess() << std::endl;
+        *output << "-S " << mat->getShininess() << std::endl;
         
         return true;
     }

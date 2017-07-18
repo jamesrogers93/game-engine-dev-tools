@@ -11,8 +11,10 @@ list(APPEND DEVTOOLS_INC
 	"src/JMPData.cpp"
 	"src/JMPExporter.cpp"
 	"src/JMPExporterBase.cpp"
-	"src/JMPExporterGeometry.cpp"
+	"src/JMPExporterEntity.cpp"
 	"src/JMPExporterMaterial.cpp"
+	"src/JMPExporterMesh.cpp"
+	"src/JMPExporterProperty.cpp"
 	"src/Main.cpp"
 )
 

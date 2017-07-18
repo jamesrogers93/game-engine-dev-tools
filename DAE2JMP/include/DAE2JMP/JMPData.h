@@ -9,8 +9,8 @@
 
 class Material;
 class Mesh;
+class Entity;
 class JointEntity;
-//class AnimatableMeshProperty;
 class Property;
 
 namespace DAE2JMP
@@ -31,7 +31,7 @@ namespace DAE2JMP
     private:
         std::map<std::string, Mesh*> meshes;
         std::map<std::string, Material*> materials;
-        std::map<std::string, JointEntity*> joints;
+        std::map<std::string, Entity*> entites;
         std::map<std::string, Property*> properties;
         
     public:
@@ -41,7 +41,7 @@ namespace DAE2JMP
         
         std::map<std::string, Mesh*>& getMeshes() { return this->meshes; }
         std::map<std::string, Material*>& getMaterials() { return this->materials; }
-        std::map<std::string, JointEntity*>& getJointEntites() { return this->joints; }
+        std::map<std::string, Entity*>& getEntites() { return this->entites; }
         void processVisualScene(DAEEntity*, DAEImporter*);
         std::map<std::string, Property*>& getProperties() { return this->properties; }
         
@@ -53,9 +53,9 @@ namespace DAE2JMP
         Mesh* processMesh(const DAEMesh*, const DAESkin*);
         Mesh* processMesh(const DAEMesh*);
         
-        void addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertex, const DAEMesh* mesh, const DAESkin* skin, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
+        void addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertex, const DAEMesh* mesh, const DAESkin* skin, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned int &nextIndex);
         
-        void addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertex, const DAEMesh* mesh, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices);
+        void addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertex, const DAEMesh* mesh, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned int &nextIndex);
         
         std::string processMaterial(const unsigned long long &, DAEImporter*);
         

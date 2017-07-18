@@ -1,7 +1,9 @@
 #include "DAE2JMP/JMPExporter.h"
 
 #include "DAE2JMP/JMPExporterMaterial.h"
-#include "DAE2JMP/JMPExporterGeometry.h"
+#include "DAE2JMP/JMPExporterMesh.h"
+#include "DAE2JMP/JMPExporterEntity.h"
+#include "DAE2JMP/JMPExporterProperty.h"
 
 namespace DAE2JMP
 {
@@ -16,6 +18,9 @@ namespace DAE2JMP
         
         // Export entity hierarchy
         exportEntites();
+        
+        // Export properties
+        exportProperties();
         
         return true;
     }
@@ -52,43 +57,64 @@ namespace DAE2JMP
     
     void JMPExporter::exportEntites()
     {
-        std::string path = this->mConfig.inputFile;
-        std::string name;
-        
-        size_t sep = path.find_last_of("\\/");
-        if (sep != std::string::npos)
-            path = path.substr(sep + 1, path.size() - sep - 1);
-        
-        size_t dot = path.find_last_of(".");
-        if (dot != std::string::npos)
+        for(auto &entity : this->mConfig.jmpData->getEntites())
         {
-            name = path.substr(0, dot);
-        }
-        else
-        {
-            name = path;
+            // Open file to write
+            std::string path = this->mConfig.outputFolder + entity.first + ".jmpEntity";
+            
+            this->mOutputStream.open(path, std::ios::binary | std::ios::trunc);
+            
+            exportEntity(entity.second);
+            
+            this->mOutputStream.close();
         }
         
     }
     
+    void JMPExporter::exportProperties()
+    {
+        for(auto &property : this->mConfig.jmpData->getProperties())
+        {
+            // Open file to write
+            std::string path = this->mConfig.outputFolder + property.first + ".jmpProperty";
+            
+            this->mOutputStream.open(path, std::ios::binary | std::ios::trunc);
+            
+            exportProperty(property.second);
+            
+            this->mOutputStream.close();
+        }
+    }
+    
     bool JMPExporter::exportMaterial(const Material* mat)
     {
+        std::cout << "Export material" << std::endl;
         
         JMPExporterMaterial exporterMaterial(this);
-        
         return exporterMaterial.Export(mat);
     }
     
     bool JMPExporter::exportMesh(const Mesh* mesh)
     {
-        JMPExporterMesh exporterMesh(this);
+        std::cout << "Export mesh" << std::endl;
         
+        JMPExporterMesh exporterMesh(this);
         return exporterMesh.Export(mesh);
     }
     
-    bool JMPExporter::exportEntity(const Entity*)
+    bool JMPExporter::exportEntity(const Entity* entity)
     {
-        return true;
+        std::cout << "Export entity" << std::endl;
+        
+        JMPExporterEntity exporterEntity(this);
+        return exporterEntity.Export(entity);
     }
-
+    
+    bool JMPExporter::exportProperty(const Property* property)
+    {
+        std::cout << "Export property" << std::endl;
+        
+        JMPExporterProperty exporterProperty(this);
+        return exporterProperty.Export(property);
+    }
 }

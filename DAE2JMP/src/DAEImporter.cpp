@@ -186,20 +186,20 @@ namespace DAE2JMP
 
     bool DAEImporter::writeGlobalAsset ( const COLLADAFW::FileInfo* asset )
     {
-        std::cout << "write global asset" << std::endl;
+        std::cout << "Import global asset" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeScene ( const COLLADAFW::Scene* scene )
     {
-        std::cout << "Write scene" << std::endl;
+        std::cout << "Import scene" << std::endl;
         
         return true;
     }
 
     bool DAEImporter::writeVisualScene ( const COLLADAFW::VisualScene* visualScene )
     {
-        std::cout << "Write visual scene" << std::endl;
+        std::cout << "Import visual scene" << std::endl;
         
         DAEImporterVisualScene importerVisualScene(this);
         return importerVisualScene.import(visualScene);
@@ -207,13 +207,13 @@ namespace DAE2JMP
 
     bool DAEImporter::writeLibraryNodes ( const COLLADAFW::LibraryNodes* libraryNodes )
     {
-        std::cout << "Write library nodes" << std::endl;
+        std::cout << "Import library nodes" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeGeometry ( const COLLADAFW::Geometry* geometry )
     {
-        std::cout << "Write geometry" << std::endl;
+        std::cout << "Import geometry" << std::endl;
 
         if(geometry->getType() != COLLADAFW::Geometry::GEO_TYPE_MESH)
         {
@@ -229,7 +229,7 @@ namespace DAE2JMP
 
     bool DAEImporter::writeMaterial( const COLLADAFW::Material* material )
     {
-        std::cout << "Write material" << std::endl;
+        std::cout << "Import material" << std::endl;
         
         DAEImporterMaterial importerMaterial(this);
         return importerMaterial.import(material);
@@ -237,7 +237,7 @@ namespace DAE2JMP
 
     bool DAEImporter::writeEffect( const COLLADAFW::Effect* effect )
     {
-        std::cout << "Write effect" << std::endl;
+        std::cout << "Import effect" << std::endl;
         
         DAEImporterEffect importerEffect(this);
         return importerEffect.import(effect);
@@ -245,37 +245,37 @@ namespace DAE2JMP
 
     bool DAEImporter::writeCamera( const COLLADAFW::Camera* camera )
     {
-        std::cout << "Write camera" << std::endl;
+        std::cout << "Import camera" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeImage( const COLLADAFW::Image* image )
     {
-        std::cout << "Write image" << std::endl;
+        std::cout << "Import image" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeLight( const COLLADAFW::Light* light )
     {
-        std::cout << "Write light" << std::endl;
+        std::cout << "Import light" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeAnimation( const COLLADAFW::Animation* animation )
     {
-        std::cout << "Write animation" << std::endl;
+        std::cout << "Import animation" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeAnimationList( const COLLADAFW::AnimationList* animationList )
     {
-        std::cout << "Write animation list" << std::endl;
+        std::cout << "Import animation list" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeSkinControllerData( const COLLADAFW::SkinControllerData* skinControllerData )
     {
-        std::cout << "Write skin contoller data" << std::endl;
+        std::cout << "Import skin contoller data" << std::endl;
         
         DAEImporterSkin importerSkin(this);
         return importerSkin.import(skinControllerData);
@@ -283,7 +283,7 @@ namespace DAE2JMP
 
     bool DAEImporter::writeController( const COLLADAFW::Controller* controller )
     {
-        std::cout << "Write controller" << std::endl;
+        std::cout << "Import controller" << std::endl;
         
         
         if(controller->getControllerType() != COLLADAFW::Controller::CONTROLLER_TYPE_SKIN)
@@ -299,13 +299,13 @@ namespace DAE2JMP
 
     bool DAEImporter::writeFormulas( const COLLADAFW::Formulas* formulas )
     {
-        std::cout << "Write formulas" << std::endl;
+        std::cout << "Import formulas" << std::endl;
         return true;
     }
 
     bool DAEImporter::writeKinematicsScene( const COLLADAFW::KinematicsScene* kinematicsScene )
     {
-        std::cout << "Write kinematics scene" << std::endl;
+        std::cout << "Import kinematics scene" << std::endl;
         return true;
     }
 

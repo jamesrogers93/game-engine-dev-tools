@@ -1,4 +1,4 @@
-#include "DAE2JMP/JMPExporterGeometry.h"
+#include "DAE2JMP/JMPExporterMesh.h"
 
 #include <ostream>
 
@@ -27,35 +27,37 @@ namespace DAE2JMP
         if(vertices.size() == 0)
             return false;
         
+        *output << geo->getName() << std::endl;
+        
         // Write header
         if(vertices[0].hasPosition())
         {
-            *output << "S " << POSITION << " " << vertices[0].POSITION_STRIDE << std::endl;
+            *output << "-S " << POSITION << " " << vertices[0].POSITION_STRIDE << std::endl;
         }
         
         if(vertices[0].hasNormal())
         {
-            *output << "S " << NORMAL << " " << vertices[0].NORMAL_STRIDE << std::endl;
+            *output << "-S " << NORMAL << " " << vertices[0].NORMAL_STRIDE << std::endl;
         }
         
         if(vertices[0].hasUV0())
         {
-            *output << "S " << UV0 << " " << vertices[0].UV0_STRIDE << std::endl;
+            *output << "-S " << UV0 << " " << vertices[0].UV0_STRIDE << std::endl;
         }
         
         if(vertices[0].hasColour())
         {
-            *output << "S " << COLOUR << " " << vertices[0].COLOUR_STRIDE << std::endl;
+            *output << "-S " << COLOUR << " " << vertices[0].COLOUR_STRIDE << std::endl;
         }
         
         if(vertices[0].hasJointId())
         {
-            *output << "S " << JOINT_ID << " " << vertices[0].JOINT_STRIDE << std::endl;
+            *output << "-S " << JOINT_ID << " " << vertices[0].JOINT_STRIDE << std::endl;
         }
         
         if(vertices[0].hasJointWeight())
         {
-            *output << "S " << JOINT_WEIGHT << " " << vertices[0].JOINT_STRIDE << std::endl;
+            *output << "-S " << JOINT_WEIGHT << " " << vertices[0].JOINT_STRIDE << std::endl;
         }
         
         // Write vertex data
@@ -67,13 +69,13 @@ namespace DAE2JMP
             vertexData.insert(std::end(vertexData), std::begin(tempVertexData), std::end(tempVertexData));
         }
         
-        *output << "V " << vertices.size() << " ";
+        *output << "-V " << vertices.size() << " ";
         std::ostream_iterator<float> output_iterator(*output, " ");
         std::copy(vertexData.begin(), vertexData.end(), output_iterator);
         *output << std::endl;
         
         // Write index data
-        *output << "I " << indices.size() <<  " ";
+        *output << "-I " << indices.size() <<  " ";
         std::ostream_iterator<unsigned int> output_iterator2(*output, " ");
         std::copy(indices.begin(), indices.end(), output_iterator2);
         

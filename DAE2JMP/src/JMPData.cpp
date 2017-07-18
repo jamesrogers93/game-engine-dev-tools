@@ -55,8 +55,9 @@ namespace DAE2JMP
             // 'Joint' node.
             // Process the joint heirarchy
             JointEntity *joint = processJoints((DAEJoint*)visualSceneNode, importer);
+            joint->calculateInverseBindTransform();
             
-            this->joints[joint->getName()] = joint;
+            this->entites[joint->getName()] = joint;
         }
         else
         {
@@ -105,7 +106,7 @@ namespace DAE2JMP
             // Create a MeshProperty and add it to the properties map
             MeshProperty *meshProperty;
             meshProperty = new MeshProperty(daeNode->getName());
-            meshProperty->setGeometryKey(daeMesh->name);
+            meshProperty->setMeshKey(daeMesh->name);
             meshProperty->setMaterialKey(materialKey);
             this->properties[daeNode->getName()] = meshProperty;
         }
@@ -157,7 +158,7 @@ namespace DAE2JMP
                 // Create the AnimatableMeshProperty and add it to the properties map
                 AnimatableMeshProperty *animMeshProperty;
                 animMeshProperty = new AnimatableMeshProperty(daeNode->getName());
-                animMeshProperty->setGeometryKey(daeMesh->name);
+                animMeshProperty->setMeshKey(daeMesh->name);
                 animMeshProperty->setMaterialKey(materialKey);
                 animMeshProperty->setJointKeys(processJointNames(c, importer));
                 this->properties[daeNode->getName()] = animMeshProperty;
@@ -181,11 +182,11 @@ namespace DAE2JMP
     
     Mesh* JMPData::processMesh(const DAEMesh* mesh, const DAESkin* skin)
     {
-        
         VertexIndexMap vertexOrderMap;
         
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
+        unsigned int nextIndex = 0;
         
         
         // Loop over all of the position indices
@@ -216,10 +217,10 @@ namespace DAE2JMP
             vertex.setJointWeight(mesh->positionIndices[i]);
             
             // Add vertex to the vertexData
-            this->addVertex(vertexOrderMap, vertex, mesh, skin, vertices, indices);
+            this->addVertex(vertexOrderMap, vertex, mesh, skin, vertices, indices, nextIndex);
         }
 
-        return new Mesh(vertices, indices);
+        return new Mesh(mesh->name, vertices, indices);
     }
     
     Mesh* JMPData::processMesh(const DAEMesh* mesh)
@@ -229,7 +230,7 @@ namespace DAE2JMP
         
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        
+        unsigned int nextIndex = 0;
         
         // Loop over all of the position indices
         for(unsigned int i = 0; i < mesh->positionIndicesCount; i++)
@@ -255,13 +256,13 @@ namespace DAE2JMP
             }
             
             // Add vertex to the vertexData
-            this->addVertex(vertexOrderMap, vertex, mesh, vertices, indices);
+            this->addVertex(vertexOrderMap, vertex, mesh, vertices, indices, nextIndex);
         }
         
-        return new Mesh(vertices, indices);
+        return new Mesh(mesh->name, vertices, indices);
     }
 
-    void JMPData::addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertexTemp, const DAEMesh* mesh, const DAESkin* skin, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices)
+    void JMPData::addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertexTemp, const DAEMesh* mesh, const DAESkin* skin, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned int &nextIndex)
     {
         
         
@@ -272,7 +273,7 @@ namespace DAE2JMP
             // Does not exist.
             // Add source data provided by indices to the respective source array.
             // Then add new element and append to the end of the elements list.
-            indices.push_back(vertexOrderMap[vertexTemp] = indices.size());
+            indices.push_back(vertexOrderMap[vertexTemp] = nextIndex++);
             
             Vertex vertex;
             
@@ -354,7 +355,7 @@ namespace DAE2JMP
         }
     }
     
-    void JMPData::addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertexTemp, const DAEMesh* mesh, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices)
+    void JMPData::addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertexTemp, const DAEMesh* mesh, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned int &nextIndex)
     {
         
         
@@ -464,7 +465,7 @@ namespace DAE2JMP
         }
         
         // Now store material
-        this->materials[material->name] = new Material(diffuse, specular, shininess);
+        this->materials[material->name] = new Material(material->name, diffuse, specular, shininess);
         
         // Return its name
         return material->name;
@@ -483,8 +484,10 @@ namespace DAE2JMP
                                 t[4],t[5],t[6],t[7],
                                 t[8],t[9],t[10],t[11],
                                 t[12],t[13],t[14],t[15]);
-            
-        joint->setInverseBindPose(glm::inverse(T));
+        
+        joint->setLocalBindTransform(T);
+        //joint->transformOW(T);
+        //joint->setInverseBindPose(glm::inverse(T));
         
         // Process Children
         for(unsigned int i = 0; i < daeJoint->getNumChildren(); i++)
