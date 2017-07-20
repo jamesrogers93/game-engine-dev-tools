@@ -21,6 +21,7 @@
 #include "DAE2JMP/DAEImporterEffect.h"
 #include "DAE2JMP/DAEImporterSkinController.h"
 #include "DAE2JMP/DAEImporterVisualScene.h"
+#include "DAE2JMP/DAEImporterAnimation.h"
 
 
 //class Scene;
@@ -44,6 +45,7 @@ namespace DAE2JMP
         bool addLoadedEffect(const unsigned long long&, const DAEEffect&);
         bool addLoadedSkinController(const unsigned long long&, const DAESkinController&);
         bool addLoadedVisualScene(const unsigned long long&, const DAEVisualScene&);
+        bool addLoadedAnimation(const unsigned long long&, const DAEAnimation&);
         bool addLoadedJointName(const unsigned long long&, const std::string&);
         
         std::map<unsigned long long, DAEMesh>* getLoadedMeshes() { return &this->loadedMeshes; }
@@ -52,6 +54,7 @@ namespace DAE2JMP
         std::map<unsigned long long, DAEEffect>* getLoadedEffects() { return &this->loadedEffects; }
         std::map<unsigned long long, DAESkinController>* getLoadedSkinControllers() { return &this->loadedSkinControllers; }
         std::map<unsigned long long, DAEVisualScene>* getLoadedVisualScenes() { return &this->loadedVisualScenes; }
+        std::map<unsigned long long, DAEAnimation>* getLoadedAnimations() { return &this->loadedAnimations; }
         std::map<unsigned long long, std::string>* getLoadedJointNames() { return &this->loadedJointNames; }
         
         /** This method will be called if an error in the loading process occurred and the loader cannot
@@ -141,6 +144,7 @@ namespace DAE2JMP
         std::map<unsigned long long, DAEEffect> loadedEffects;
         std::map<unsigned long long, DAESkinController> loadedSkinControllers;
         std::map<unsigned long long, DAEVisualScene> loadedVisualScenes;
+        std::map<unsigned long long, DAEAnimation> loadedAnimations;
         std::map<unsigned long long, std::string> loadedJointNames;
         
         DAEImporter(const DAEImporter&);

@@ -9,6 +9,7 @@
 #include "DAE2JMP/DAEImporterMaterial.h"
 #include "DAE2JMP/DAEImporterEffect.h"
 #include "DAE2JMP/DAEImporterSkinController.h"
+#include "DAE2JMP/DAEImporterAnimation.h"
 
 namespace DAE2JMP
 {
@@ -90,6 +91,17 @@ namespace DAE2JMP
         if(this->loadedVisualScenes.find(Id) == this->loadedVisualScenes.end())
         {
             this->loadedVisualScenes[Id] = scene;
+            return true;
+        }
+        
+        return false;
+    }
+    
+    bool DAEImporter::addLoadedAnimation(const unsigned long long &Id, const DAEAnimation &animation)
+    {
+        if(this->loadedAnimations.find(Id) == this->loadedAnimations.end())
+        {
+            this->loadedAnimations[Id] = animation;
             return true;
         }
         
@@ -264,7 +276,14 @@ namespace DAE2JMP
     bool DAEImporter::writeAnimation( const COLLADAFW::Animation* animation )
     {
         std::cout << "Import animation" << std::endl;
-        return true;
+        
+        if(animation->getAnimationType() != COLLADAFW::Animation::ANIMATION_CURVE)
+        {
+            return true;
+        }
+        
+        DAEImporterAnimation importerAnimation(this);
+        return importerAnimation.import((COLLADAFW::AnimationCurve*)animation);
     }
 
     bool DAEImporter::writeAnimationList( const COLLADAFW::AnimationList* animationList )

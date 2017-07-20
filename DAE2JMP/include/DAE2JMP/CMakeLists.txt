@@ -1,6 +1,7 @@
 list(APPEND DEVTOOLS_INC
 	"include/DAE2JMP/DAE2JMPConfig.h"	
 	"include/DAE2JMP/DAEImporter.h"	
+	"include/DAE2JMP/DAEImporterAnimation.h"	
 	"include/DAE2JMP/DAEImporterBase.h"
 	"include/DAE2JMP/DAEImporterEffect.h"
 	"include/DAE2JMP/DAEImporterMaterial.h"
@@ -11,6 +12,7 @@ list(APPEND DEVTOOLS_INC
 	"include/DAE2JMP/DAEUtil.h"
 	"include/DAE2JMP/JMPData.h"
 	"include/DAE2JMP/JMPExporter.h"
+	"include/DAE2JMP/JMPExporterAnimation.h"
 	"include/DAE2JMP/JMPExporterBase.h"
 	"include/DAE2JMP/JMPExporterEntity.h"
 	"include/DAE2JMP/JMPExporterMaterial.h"

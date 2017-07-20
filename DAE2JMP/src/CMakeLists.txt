@@ -1,5 +1,6 @@
 list(APPEND DEVTOOLS_INC
 	"src/DAEImporter.cpp"
+	"src/DAEImporterAnimation.cpp"
 	"src/DAEImporterBase.cpp"
 	"src/DAEImporterEffect.cpp"
 	"src/DAEImporterMaterial.cpp"
@@ -10,6 +11,7 @@ list(APPEND DEVTOOLS_INC
 	"src/DAEUtil.cpp"
 	"src/JMPData.cpp"
 	"src/JMPExporter.cpp"
+	"src/JMPExporterAnimation.cpp"
 	"src/JMPExporterBase.cpp"
 	"src/JMPExporterEntity.cpp"
 	"src/JMPExporterMaterial.cpp"
