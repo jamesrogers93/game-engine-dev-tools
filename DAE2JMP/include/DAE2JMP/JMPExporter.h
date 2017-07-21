@@ -13,6 +13,7 @@ class Material;
 class Geometry;
 class Entity;
 class Property;
+class Animation;
 
 namespace DAE2JMP
 {
@@ -40,11 +41,13 @@ namespace DAE2JMP
         void exportMeshes();
         void exportEntites();
         void exportProperties();
+        void exportAnimations();
         
         bool exportMaterial(const Material*);
         bool exportMesh(const Mesh*);
         bool exportEntity(const Entity*);
         bool exportProperty(const Property*);
+        bool exportAnimation(const Animation*);
     };
 
 }

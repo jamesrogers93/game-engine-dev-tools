@@ -12,6 +12,7 @@ class Mesh;
 class Entity;
 class JointEntity;
 class Property;
+class Animation;
 
 namespace DAE2JMP
 {
@@ -33,6 +34,7 @@ namespace DAE2JMP
         std::map<std::string, Material*> materials;
         std::map<std::string, Entity*> entites;
         std::map<std::string, Property*> properties;
+        std::map<std::string, Animation*> animations;
         
     public:
         JMPData(){}
@@ -42,13 +44,10 @@ namespace DAE2JMP
         std::map<std::string, Mesh*>& getMeshes() { return this->meshes; }
         std::map<std::string, Material*>& getMaterials() { return this->materials; }
         std::map<std::string, Entity*>& getEntites() { return this->entites; }
-        void processVisualScene(DAEEntity*, DAEImporter*);
         std::map<std::string, Property*>& getProperties() { return this->properties; }
+        std::map<std::string, Animation*>& getAnimations() { return this->animations; }
         
     private:
-
-        void processMeshProperty(DAENode*, DAEImporter*);
-        void processAnimatedMeshProperty(DAENode*, DAEImporter*);
         
         Mesh* processMesh(const DAEMesh*, const DAESkin*);
         Mesh* processMesh(const DAEMesh*);
@@ -57,10 +56,13 @@ namespace DAE2JMP
         
         void addVertex(VertexIndexMap &vertexOrderMap, VertexIndex &vertex, const DAEMesh* mesh, std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, unsigned int &nextIndex);
         
+        void processMeshProperty(DAENode*, DAEImporter*);
+        void processAnimatedMeshProperty(DAENode*, DAEImporter*);
+        void processVisualScene(DAEEntity*, DAEImporter*);
         std::string processMaterial(const unsigned long long &, DAEImporter*);
-        
         JointEntity* processJoints(DAEJoint*, DAEImporter *);
         std::vector<std::string> processJointNames(DAESkinController*, DAEImporter*);
+        
         
     };
 

@@ -4,6 +4,7 @@
 #include "DAE2JMP/JMPExporterMesh.h"
 #include "DAE2JMP/JMPExporterEntity.h"
 #include "DAE2JMP/JMPExporterProperty.h"
+#include "DAE2JMP/JMPExporterAnimation.h"
 
 namespace DAE2JMP
 {
@@ -21,6 +22,9 @@ namespace DAE2JMP
         
         // Export properties
         exportProperties();
+        
+        // Export Animations
+        exportAnimations();
         
         return true;
     }
@@ -86,6 +90,21 @@ namespace DAE2JMP
         }
     }
     
+    void JMPExporter::exportAnimations()
+    {
+        for(auto &animation : this->mConfig.jmpData->getAnimations())
+        {
+            // Open file to write
+            std::string path = this->mConfig.outputFolder + animation.first + ".jmpAnimation";
+            
+            this->mOutputStream.open(path, std::ios::binary | std::ios::trunc);
+            
+            exportAnimation(animation.second);
+            
+            this->mOutputStream.close();
+        }
+    }
+    
     bool JMPExporter::exportMaterial(const Material* mat)
     {
         std::cout << "Export material" << std::endl;
@@ -116,5 +135,13 @@ namespace DAE2JMP
         
         JMPExporterProperty exporterProperty(this);
         return exporterProperty.Export(property);
+    }
+    
+    bool JMPExporter::exportAnimation(const Animation *animation)
+    {
+        std::cout << "Export animation" << std::endl;
+        
+        JMPExporterAnimation exporterAnimation(this);
+        return exporterAnimation.Export(animation);
     }
 }

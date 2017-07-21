@@ -9,15 +9,22 @@
 #include "DAE2JMP/DAEImporterSkinController.h"
 #include "DAE2JMP/DAEImporterMesh.h"
 #include "DAE2JMP/DAEImporterSkin.h"
+#include "DAE2JMP/DAEImporterAnimation.h"
 
 // Game Engine
 #include <game-engine/Entity/Entity.h>
 #include <game-engine/Modules/Graphics/AnimatableMeshProperty.h>
-#include <game-engine/Modules/Animation/JointEntity.h>
 #include <game-engine/Modules/Graphics/Mesh.h>
 #include <game-engine/Modules/Graphics/Material.h>
+#include <game-engine/Modules/Animation/JointEntity.h>
+#include <game-engine/Modules/Animation/JointAnimation.h>
+#include <game-engine/Modules/Animation/JointTransform.h>
+#include <game-engine/Modules/Animation/Animation.h>
 
+// GLM
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace DAE2JMP
 {
@@ -40,6 +47,51 @@ namespace DAE2JMP
                 processVisualScene(visualSceneNode, importer);
             }
         }
+        
+        std::map<std::string, JointAnimation> jointAnimations;
+        float maxTimeStamp = 0.0;
+        for(auto &animation : *importer->getLoadedAnimations())
+        {
+            std::vector<KeyFrame> keyFrames;
+            
+            size_t numFrames = animation.second.frames.size();
+            for(unsigned int i = 0; i < numFrames; i++)
+            {
+                float timeStamp = animation.second.frames[i];
+                glm::mat4 transform = animation.second.transforms[i];
+                
+                // Extract positon and quaternion rotation from transform
+                glm::vec4 position = transform[3];
+                glm::fquat rotation = glm::toQuat(transform);
+                
+                JointTransform jointTransform = JointTransform(position, rotation);
+                KeyFrame keyFrame = KeyFrame(timeStamp, jointTransform);
+                
+                keyFrames.push_back(keyFrame);
+            }
+            
+            //float length = std::max_element(animation.second.frames.begin(), animation.second.frames.end());
+            float length = animation.second.frames[numFrames-1];
+            JointAnimation jointAnimation = JointAnimation(length, keyFrames);
+            
+            if(length > maxTimeStamp)
+            {
+                maxTimeStamp = length;
+            }
+            
+            if(jointAnimations.find(animation.second.name) == jointAnimations.end())
+            {
+                jointAnimations[animation.second.name] = jointAnimation;
+            }
+            else
+            {
+                std::cout << "Problem!" << std::endl;
+            }
+    
+        }
+        Animation *animation = new Animation(maxTimeStamp, jointAnimations);
+        
+        this->animations["unamed-animation"] = animation;
         
         // Test
         //AnimatableMeshProperty *test1 = (AnimatableMeshProperty*)this->properties["Alpha_Joints"];
