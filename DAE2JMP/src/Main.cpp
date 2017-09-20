@@ -3,27 +3,45 @@
 #include <string>
 #include <iostream>
 
-#include "DAE2JMP/JMPWriter.h"
+#include "DAE2JMP/JMPData.h"
+#include "DAE2JMP/DAEImporter.h"
+#include "DAE2JMP/JMPExporter.h"
 
+
+#include <fstream>
 int main(int argc, char *argv[])
 {
+
     if(argc != 3)
     {
-        std::cout << "Must provide a DAE file path and a target file path" << std::endl;
+        std::cout << "Must provIde a DAE file path and a target file path" << std::endl;
         return 1;
     }
     else
     {
-        // Prepare loader configuration
-        JMPWriter::JMPWriterConfig config;
+        
+        DAE2JMP::JMPData jmpData;
+        
+        // Prepare importer configuration
+        DAE2JMP::DAE2JMPConfig config;
         config.inputFile = argv[1];
-        config.outputFile = argv[2];
-        config.loadGeometry = true;
+        config.outputFolder = argv[2];
+        config.jmpData = &jmpData;
+        
+        
         
         // Instantiate loader and read file
-        JMPWriter writer(config);
-        writer.write();
+        DAE2JMP::DAEImporter importer(config);
+        bool status =  importer.Import();
+        
+        if(status)
+        {
+            // Instantiate exporter
+            DAE2JMP::JMPExporter exporter(config);
+            
+            status = exporter.Export();
+        }
+        
+        return status;
     }
-    
-    return 0;
 }

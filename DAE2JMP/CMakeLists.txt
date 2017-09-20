@@ -1,10 +1,14 @@
 project(DAE2JMP)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 # Finds all header and source files and places in DEVTOOLS_INC and DEVTOOLS_INC respectively
 include(include/CMakeLists.txt)
 include(src/CMakeLists.txt)
+
+# Includes for it's own headers
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Includes for the game engine
+include_directories(${CMAKE_SOURCE_DIR}/external/game-engine/game-engine/include) 
 
 # PugiXML library
 find_package(PugiXML REQUIRED)
@@ -30,6 +34,10 @@ list(APPEND PLATFORM_LIBRARIES
     #${OPENCOLLADA_LIBRARIES}
 )
 
+# Include GLM (same for all platforms)
+find_package (glm REQUIRED)
+include_directories(${GLM_INCLUDE_DIRS})
+
 #find_package(ASSIMP REQUIRED)
 #include_directories(${ASSIMP_INCLUDE_DIRS})
 #list(APPEND PLATFORM_LIBRARIES
@@ -41,4 +49,9 @@ message(STATUS "OpenCOLLADA libs:\n " ${OPENCOLLADA_LIBRARIES})
 
 
 add_executable(DAE2JMP ${DEVTOOLS_INC} ${DEVTOOLS_SRC})
+
+# Link the Game Engine libraries
+target_link_libraries(DAE2JMP GameEngine)
+
+# Link the other libraries
 target_link_libraries(DAE2JMP ${PLATFORM_LIBRARIES})
