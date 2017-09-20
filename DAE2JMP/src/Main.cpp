@@ -7,8 +7,11 @@
 #include "DAE2JMP/DAEImporter.h"
 #include "DAE2JMP/JMPExporter.h"
 
+
+#include <fstream>
 int main(int argc, char *argv[])
 {
+
     if(argc != 3)
     {
         std::cout << "Must provIde a DAE file path and a target file path" << std::endl;

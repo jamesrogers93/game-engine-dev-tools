@@ -132,6 +132,16 @@ namespace DAE2JMP
                 // Process AnimatedMeshProperty
                 processAnimatedMeshProperty(daeNode, importer);
             }
+            else
+            {
+                // Must be some sort of container node.
+                // Ignore it and process it's children
+                for(unsigned int i = 0; i < visualSceneNode->getNumChildren(); i++)
+                {
+                    processVisualScene(visualSceneNode->getChild(i), importer);
+                }
+                
+            }
         }
     }
     

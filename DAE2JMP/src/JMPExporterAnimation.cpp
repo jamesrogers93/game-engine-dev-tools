@@ -13,9 +13,10 @@ namespace DAE2JMP
     {
         std::ofstream *output = this->mJMPExporter->getOutputStream();
         
-        *output << animation->getLength() << std::endl;
-        
         std::map<std::string, JointAnimation> jointAnimations = animation->getJointAnimations();
+        
+        *output << animation->getLength() << std::endl;
+        *output << jointAnimations.size() << std::endl;
         
         for(auto &joint : jointAnimations)
         {
